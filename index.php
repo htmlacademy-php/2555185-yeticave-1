@@ -1,7 +1,8 @@
 <?php
 $is_auth = rand(0, 1);
+$categories =["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
 
-$user_name = 'Александра'; // укажите здесь ваше имя
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -28,12 +29,13 @@ $user_name = 'Александра'; // укажите здесь ваше им�
 
         <nav class="user-menu">
 
-        <?php  if($is_auth):  ?>
+
             <div class="user-menu__logged">
                 <p><?= htmlspecialchars($user_name) ?></p>
                 <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
                 <a class="user-menu__logout" href="#">Выход</a>
             </div>
+
 
         <?php else: ?>
             <ul class="user-menu__list">
@@ -55,10 +57,11 @@ $user_name = 'Александра'; // укажите здесь ваше им�
         <h2 class="promo__title">Нужен стафф для катки?</h2>
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
-            <!--заполните этот список из массива категорий-->
+            <?php foreach($categories as $category): ?>
             <li class="promo__item promo__item--boards">
-                <a class="promo__link" href="pages/all-lots.html">Имя категории</a>
+                <a class="promo__link" href="pages/all-lots.html"><?=$category?></a>
             </li>
+             <?php endforeach; ?>
         </ul>
     </section>
     <section class="lots">
@@ -66,18 +69,18 @@ $user_name = 'Александра'; // укажите здесь ваше им�
             <h2>Открытые лоты</h2>
         </div>
         <ul class="lots__list">
-            <!--заполните этот список из массива с товарами-->
+            <?php foreach($advertisements as $ads): ?>
             <li class="lots__item lot">
                 <div class="lot__image">
-                    <img src="" width="350" height="260" alt="">
+                    <img src="<?=$ads['imgUrl']?>" width="350" height="260" alt="">
                 </div>
                 <div class="lot__info">
-                    <span class="lot__category">Название категории</span>
-                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html">Название товара</a></h3>
+                    <span class="lot__category"><?=$ads['category']?></span>
+                    <h3 class="lot__title"><a class="text-link" href="pages/lot.html"><?=$ads['name']?></a></h3>
                     <div class="lot__state">
                         <div class="lot__rate">
                             <span class="lot__amount">Стартовая цена</span>
-                            <span class="lot__cost">цена<b class="rub">р</b></span>
+                            <span class="lot__cost"><?=$ads['price']?><b class="rub">р</b></span>
                         </div>
                         <div class="lot__timer timer">
                             12:23
@@ -85,6 +88,7 @@ $user_name = 'Александра'; // укажите здесь ваше им�
                     </div>
                 </div>
             </li>
+            <?php endforeach; ?>
         </ul>
     </section>
 </main>
