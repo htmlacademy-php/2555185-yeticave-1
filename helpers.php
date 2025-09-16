@@ -13,6 +13,19 @@
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
+function formatPrice($number) {
+     if ($number === null || !is_numeric($number)) {
+        return '0 ₽';
+    }
+    $rounded = ceil($number);
+    if ($rounded >= 1000) {
+        $formatted = number_format($rounded, 0, '', ' ');
+    } else {
+        $formatted = $rounded;
+    }
+    return $formatted . ' ₽';
+}
+
 function is_date_valid(string $date) : bool {
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
