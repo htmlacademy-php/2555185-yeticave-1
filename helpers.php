@@ -26,6 +26,23 @@ function formatPrice($number) {
     return $formatted . ' ₽';
 }
 
+function get_dt_range($date) {
+    $current_time = time();
+    $end_time = strtotime($date);
+    $time_diff = $end_time - $current_time;
+
+    if ($time_diff <= 0) {
+        return [0, 0];
+    }
+
+    $hours = floor($time_diff / 3600);
+    $minutes = floor(($time_diff % 3600) / 60);
+
+    $time = [$hours, $minutes];
+
+    return $time;
+}
+
 function is_date_valid(string $date) : bool {
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
