@@ -54,10 +54,11 @@ $user_name = 'Александра'; // укажите здесь ваше им�
 <footer class="main-footer">
     <nav class="nav">
         <ul class="nav__list container">
-            <!--заполните этот список из массива категорий-->
-            <li class="nav__item">
-                <a href="pages/all-lots.html">Название категории</a>
+          <?php foreach($categories as $category): ?>
+            <li class="promo__item promo__item--<?= htmlspecialchars($category['symbol_code']) ?>">
+                <a class="promo__link" href="pages/all-lots.html"><?= htmlspecialchars($category['title']) ?></a>
             </li>
+             <?php endforeach; ?>
         </ul>
     </nav>
     <div class="main-footer__bottom container">
