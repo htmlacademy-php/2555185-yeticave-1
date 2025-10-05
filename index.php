@@ -1,62 +1,37 @@
 <?php
+
 date_default_timezone_set('Asia/Vladivostok');
+
 require_once('./helpers.php');
+require_once 'init.php';
 
-$categories =["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
-$advertisements = [
-[
-    'name'=> '2014 Rossignol District Snowboard',
-    'category'=> $categories[0],
-    'price'=> 10999,
-    'imgUrl'=>'img/lot-1.jpg',
-    'expirationDate'=> '2025-09-19'
-],
+if(!$link){
+    $error = mysqli_connect_error();
+    $content = include_template('error.php', ['error' => $error]);
+}
+else {
+    // ПОЛУЧЕНИЕ КАТЕГОРИЙ
+    $sql = 'SELECT title, symbol_code FROM categories';
+    $result = mysqli_query($link, $sql);
 
-[
-    'name'=> 'DC Ply Mens 2016/2017 Snowboard',
-    'category'=> $categories[0],
-    'price'=> 159999,
-    'imgUrl'=>'img/lot-2.jpg',
-    'expirationDate'=> '2025-09-21'
-],
+  if ($result) {
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+// ПОЛУЧЕНИЕ ЛОТОВ
+$lots_sql = 'SELECT lots.title AS lot_title, lots.start_price, lots.image, lots.category_id, lots.end_date, categories.title AS category_title '
+. 'FROM lots '
+. 'JOIN categories ON lots.category_id = categories.id '
+. 'WHERE lots.end_date > NOW() '
+. 'ORDER BY lots.created_at DESC LIMIT 6;';
 
-[
-    'name'=> 'Крепления Union Contact Pro 2015 года размер L/XL',
-    'category'=> $categories[1],
-    'price'=> 8000,
-    'imgUrl'=>'img/lot-3.jpg',
-    'expirationDate'=> '2025-09-22'
-],
+ $advertisements = mysqli_query($link, $lots_sql);
 
-[
-    'name'=> 'Ботинки для сноуборда DC Mutiny Charocal',
-    'category'=> $categories[2],
-    'price'=> 10999,
-    'imgUrl'=>'img/lot-4.jpg',
-    'expirationDate'=> '2025-09-23'
-],
-
-[
-    'name'=> 'Куртка для сноуборда DC Mutiny Charocal',
-    'category'=> $categories[3],
-    'price'=> 7500,
-    'imgUrl'=>'img/lot-5.jpg',
-    'expirationDate'=> '2025-09-24'
-],
-
-[
-    'name'=> 'Маска Oakley Canopy',
-    'category'=> $categories[4],
-    'price'=> 5400,
-    'imgUrl'=>'img/lot-6.jpg',
-    'expirationDate'=> '2025-09-25'
-],
-
-];
-
+ if($advertisements) {
+    $lots = mysqli_fetch_all($advertisements, MYSQLI_ASSOC);
+ }
 $pageContent = include_template('main.php', [
     'categories' => $categories,
-    'advertisements' => $advertisements,
+    'advertisements' => $advertisements
 ]);
 
 $pageLayout = include_template('layout.php', [
@@ -67,3 +42,15 @@ $pageLayout = include_template('layout.php', [
 ]);
 
 print $pageLayout;
+
+}
+
+
+
+
+
+
+
+
+
+
