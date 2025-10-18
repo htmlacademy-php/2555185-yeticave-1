@@ -13,6 +13,7 @@
  *
  * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
  */
+
 function formatPrice($number) {
      if ($number === null || !is_numeric($number)) {
         return '0 ₽';
