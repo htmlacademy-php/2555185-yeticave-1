@@ -1,5 +1,4 @@
 <?php
-die(5);
 require_once('./helpers.php');
 require_once('./functions.php');
 require_once 'init.php';
@@ -10,6 +9,8 @@ $sql_categories = 'SELECT title, symbol_code FROM categories';
 $result_categories = mysqli_query($link, $sql_categories);
 if ($result_categories) {
     $categories = mysqli_fetch_all($result_categories, MYSQLI_ASSOC);
+} else{
+    $categories = [];
 }
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -24,10 +25,12 @@ mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $lot = mysqli_fetch_assoc($res);
 
-if(!$lot){
+if (!$lot) {
 
     http_response_code(404);
-    $pageContent = include_template('404.php');
+    $pageContent = include_template('404.php', [
+        'categories' => $categories
+    ]);
 
     $layout = include_template('layout.php', [
         'pageContent' => $pageContent,
@@ -39,7 +42,8 @@ if(!$lot){
 }
 
 $pageContent = include_template('lot-template.php', [
-    'lot' => $lot
+    'lot' => $lot,
+    'categories'=> $categories
 ]);
 
 $layout = include_template('layout.php', [

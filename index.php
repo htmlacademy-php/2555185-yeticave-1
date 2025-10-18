@@ -10,9 +10,6 @@ if (!$link) {
     $error = mysqli_connect_error();
     $content = include_template('error.php', ['error' => $error]);
 } else {
-    //Получение категории по id
-
-
     // ПОЛУЧЕНИЕ КАТЕГОРИЙ
     $sql = 'SELECT title, symbol_code FROM categories';
     $result = mysqli_query($link, $sql);
