@@ -44,11 +44,15 @@ function get_dt_range($date) {
     return $time;
 }
 
-function is_date_valid(string $date) : bool {
+function is_date_valid(string $date): bool {
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
-    return $dateTimeObj !== false && array_sum(date_get_last_errors()) === 0;
+    if (!$dateTimeObj) {
+        return false;
+    }
+
+    return $dateTimeObj->format($format_to_check) === $date;
 }
 
 /**
@@ -174,4 +178,58 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+function validateCategory($id, $allowedList)
+{
 
+    if ($id === '' || $id === null) {
+        return 'Выберите категорию';
+    }
+
+    if (!in_array($id, $allowedList)) {
+        return 'Указана несуществующая категория';
+    }
+
+    return null;
+}
+
+function validatePrice($value)
+{
+    if (!is_numeric($value) || $value <= 0) {
+        return 'Начальная цена должна быть выше нуля';
+    }
+    return null;
+}
+
+function validateStep($value)
+{
+    if (!ctype_digit($value)) {
+        return 'Значение должно быть числовым';
+    }
+    $intValue = (int) $value;
+    if ($intValue <= 0) {
+        return 'Ставка должна быть выше нуля';
+    }
+
+    return null;
+}
+
+
+function validateEndDate($value)
+{
+    if (!is_date_valid($value)) {
+        return 'Неверный формат даты';
+    }
+
+    $date = date_create($value);
+    $cur_date = date_create('today');
+
+    if ($date <= $cur_date) {
+        return 'Дата должна быть больше текущей';
+    }
+
+    return null;
+}
+
+function getPostVal($name) {
+    return $_POST[$name] ?? "";
+}
