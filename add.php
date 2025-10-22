@@ -9,15 +9,15 @@ if (!$link) {
 }
 
 // Получаем категории из БД
-$sql = "SELECT id, title FROM categories"; // Исправлены кавычки
+$sql = "SELECT id, title FROM categories";
 $result = mysqli_query($link, $sql);
 
 if ($result) {
-    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC); // Исправлено MYSQLI_ASSOC
-    // Получаем массив ID категорий для валидации
+    $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     $categoriesIds = array_column($categories, 'id');
 } else {
-    $error = mysqli_error($link); // Исправлено на mysqli_error
+    $error = mysqli_error($link);
     exit();
 }
 
@@ -69,13 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $tmpName = $_FILES['image']['tmp_name'];
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $fileType = finfo_file($finfo, $tmpName);
-        finfo_close($finfo); // Важно закрыть ресурс
+        finfo_close($finfo);
 
         $permittedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
         $fileExtensions = [
-            'image/jpg'  => 'jpg',
+            'image/jpg' => 'jpg',
             'image/jpeg' => 'jpg',
-            'image/png'  => 'png',
+            'image/png' => 'png',
         ];
 
         if (!in_array($fileType, $permittedFileTypes)) {
@@ -101,14 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (move_uploaded_file($tmpName, $filepath)) {
             // Подготавливаем данные для вставки
             $lot_name = mysqli_real_escape_string($link, $lot['lot-name']);
-            $category_id = (int)$lot['category'];
+            $category_id = (int) $lot['category'];
             $message = mysqli_real_escape_string($link, $lot['message']);
-            $lot_rate = (float)$lot['lot-rate'];
-            $lot_step = (float)$lot['lot-step'];
+            $lot_rate = (float) $lot['lot-rate'];
+            $lot_step = (float) $lot['lot-step'];
             $lot_date = mysqli_real_escape_string($link, $lot['lot-date']);
 
             // SQL запрос для добавления лота
-                 $sql = 'INSERT INTO lots (
+            $sql = 'INSERT INTO lots (
     title,
     description,
     created_at,
@@ -120,24 +120,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     category_id
 ) VALUES (?, ?, NOW(), ?, ?, ?, ?, 1, ?)';
 
-$stmt = mysqli_prepare($link, $sql);
-mysqli_stmt_bind_param($stmt, 'sssdsdi',
-    $lot_name,    // title
-    $message,     // description
-    $filepath,    // image
-    $lot_rate,    // start_price
-    $lot_date,    // end_date
-    $lot_step,    // bidding_step
-    $category_id  // category_id
-);
+            $stmt = mysqli_prepare($link, $sql);
+            mysqli_stmt_bind_param(
+                $stmt,
+                'sssdsdi',
+                $lot_name,    // title
+                $message,     // description
+                $filepath,    // image
+                $lot_rate,    // start_price
+                $lot_date,    // end_date
+                $lot_step,    // bidding_step
+                $category_id  // category_id
+            );
 
-if (mysqli_stmt_execute($stmt)) {
-    $lot_id = mysqli_insert_id($link);
-    header("Location: lot.php?id=" . $lot_id);
-    exit();
-} else {
-    $errors['database'] = "Ошибка при сохранении лота: " . mysqli_error($link);
-}
+            if (mysqli_stmt_execute($stmt)) {
+                $lot_id = mysqli_insert_id($link);
+                header("Location: lot.php?id=" . $lot_id);
+                exit();
+            } else {
+                $errors['database'] = "Ошибка при сохранении лота: " . mysqli_error($link);
+            }
         } else {
             $errors['image'] = "Ошибка при загрузке изображения";
         }
