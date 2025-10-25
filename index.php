@@ -1,4 +1,8 @@
 <?php
+session_start();
+
+$isAuth = isset($_SESSION['user']);
+$userName = $_SESSION['user']['name'] ?? '';
 
 date_default_timezone_set('Asia/Vladivostok');
 

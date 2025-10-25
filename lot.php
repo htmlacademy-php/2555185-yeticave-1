@@ -1,4 +1,6 @@
 <?php
+
+session_start();
 require_once('./helpers.php');
 require_once('./functions.php');
 require_once 'init.php';
@@ -9,7 +11,7 @@ $sql_categories = 'SELECT title, symbol_code FROM categories';
 $result_categories = mysqli_query($link, $sql_categories);
 if ($result_categories) {
     $categories = mysqli_fetch_all($result_categories, MYSQLI_ASSOC);
-} else{
+} else {
     $categories = [];
 }
 
@@ -29,13 +31,15 @@ if (!$lot) {
 
     http_response_code(404);
     $pageContent = include_template('404.php', [
-        'categories' => $categories
+        'categories' => $categories,
+        'error_code' => 404,
+        'error_text' => 'Следы йети затерялись в снегах. Эта тропа ведёт в никуда'
     ]);
 
     $layout = include_template('layout.php', [
         'pageContent' => $pageContent,
-        'title' => 'Страница не найдена',
-        'categories' => $categories
+        'title' => 'Доступ запрещен',
+        'categories' => $categories,
     ]);
     print $layout;
     exit;
@@ -43,7 +47,7 @@ if (!$lot) {
 
 $pageContent = include_template('lot-template.php', [
     'lot' => $lot,
-    'categories'=> $categories
+    'categories' => $categories
 ]);
 
 $layout = include_template('layout.php', [

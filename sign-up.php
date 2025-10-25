@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Проверка обязательных полей
     foreach ($requiredFields as $field) {
         if (empty(trim($user[$field] ?? ''))) {
-            $errors[$field] = 'Не заполнено поле ' . $field;
+            $errors[$field] = 'Это поле надо заполнить';
         }
     }
 
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $insertRes = mysqli_stmt_execute($stmt);
 
             if ($insertRes) {
-                header('Location: login.php'); // Исправьте путь!
+                header('Location: login.php');
                 exit();
             } else {
                 $errors['general'] = 'Ошибка регистрации: ' . mysqli_error($link);
