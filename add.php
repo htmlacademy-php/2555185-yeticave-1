@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once 'init.php';
 require_once 'helpers.php';
 
@@ -19,6 +21,26 @@ if ($result) {
 } else {
     $error = mysqli_error($link);
     exit();
+}
+
+if (!isset($_SESSION['user'])) {
+    http_response_code(403);
+
+
+    $pageContent = include_template('404.php', [
+        'categories' => $categories,
+        'error_code' => 403,
+        'error_text' => 'Ледник недоверия. Для прохода требуется экипировка авторизованного пользователя'
+    ]);
+
+    $layout = include_template('layout.php', [
+        'pageContent' => $pageContent,
+        'title' => 'Доступ запрещен',
+        'categories' => $categories,
+    ]);
+    print $layout;
+    exit;
+
 }
 
 $errors = [];
