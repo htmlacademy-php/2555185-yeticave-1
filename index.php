@@ -41,7 +41,6 @@ if (!$link) {
     $pageLayout = include_template('layout.php', [
         'pageContent' => $pageContent,
         'title' => 'Главная',
-        'userName' => 'Александра',
         'categories' => $categories,
     ]);
 
