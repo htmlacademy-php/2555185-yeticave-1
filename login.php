@@ -67,7 +67,8 @@ $pageContent = include_template('login-template.php', [
 $layout_content = include_template('layout.php', [
     'pageContent' => $pageContent,
     'categories' => $categories,
-    'title' => 'Вход на сайт'
+    'title' => 'Вход на сайт',
+    'showNavigation' => true,
 ]);
 
 echo $layout_content;

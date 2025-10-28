@@ -82,7 +82,8 @@ $pageContent = include_template('sign-up-template.php', [
 $layout_content = include_template('layout.php', [
     'pageContent' => $pageContent,
     'categories' => $categories,
-    'title' => 'Регистрация'
+    'title' => 'Регистрация',
+    'showNavigation' => true,
 ]);
 
 echo $layout_content;

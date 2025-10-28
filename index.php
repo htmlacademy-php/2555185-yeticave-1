@@ -42,6 +42,7 @@ if (!$link) {
         'pageContent' => $pageContent,
         'title' => 'Главная',
         'categories' => $categories,
+        'showNavigation' => false,
     ]);
 
     print $pageLayout;

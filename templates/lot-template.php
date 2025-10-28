@@ -1,11 +1,3 @@
-<nav class="nav">
-    <ul class="nav__list container">
-        <?php foreach ($categories as $category): ?>
-            <li class="nav__item">
-                <a href="pages/all-lots.html"><?= htmlspecialchars($category['title']) ?></a>
-            </li>
-        <?php endforeach; ?>
-</nav>
 <section class="lot-item container">
     <h2><?= htmlspecialchars($lot['lots_title']) ?></h2>
     <div class="lot-item__content">
@@ -29,78 +21,46 @@
                 <div class="lot-item__cost-state">
                     <div class="lot-item__rate">
                         <span class="lot-item__amount">Текущая цена</span>
-                        <span class="lot-item__cost"></span>
+                        <span class="lot-item__cost"><?= formatPrice($currentPrice) ?></span>
                     </div>
                     <div class="lot-item__min-cost">
-                        Мин. ставка <span><?= htmlspecialchars(formatPrice($lot["start_price"])) ?></span>
+                        Мин. ставка
+                        <span><?= formatPrice($minBid) ?></span>
                     </div>
                 </div>
                 <?php if (isset($_SESSION['user'])): ?>
-                    <form class="lot-item__form" action="https://echo.htmlacademy.ru" method="post" autocomplete="off">
-                        <p class="lot-item__form-item form__item form__item--invalid">
+
+                    <form class="lot-item__form <?= !empty($_SESSION['bid_errors']) ? 'form--invalid' : '' ?>"
+                        action="add-bet.php" method="post" autocomplete="off">
+                        <input type="hidden" name="lot_id" value="<?= $lot['id'] ?>">
+                        <p
+                            class="lot-item__form-item form__item <?= isset($_SESSION['bid_errors']['cost']) ? 'form__item--invalid' : '' ?>">
                             <label for="cost">Ваша ставка</label>
-                            <input id="cost" type="text" name="cost" placeholder="12 000">
-                            <span class="form__error">Введите наименование лота</span>
+                            <input id="cost" type="text" name="cost"
+                                placeholder="<?= formatPrice($minBid) ?>"
+                                value="<?= htmlspecialchars($_POST['cost'] ?? '') ?>">
+                            <span class="form__error"><?= $_SESSION['bid_errors']['cost'] ?? '' ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
                 <?php endif; ?>
             </div>
-            <div class="history">
-                <h3>История ставок (<span>10</span>)</h3>
-                <table class="history__list">
-                    <tr class="history__item">
-                        <td class="history__name">Иван</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">5 минут назад</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Константин</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">20 минут назад</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Евгений</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">Час назад</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Игорь</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 08:21</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Енакентий</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 13:20</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Семён</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 12:20</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Илья</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 10:20</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Енакентий</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 13:20</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Семён</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 12:20</td>
-                    </tr>
-                    <tr class="history__item">
-                        <td class="history__name">Илья</td>
-                        <td class="history__price">10 999 р</td>
-                        <td class="history__time">19.03.17 в 10:20</td>
-                    </tr>
-                </table>
-            </div>
+<div class="history">
+    <h3>История ставок (<span><?= count($bids) ?></span>)</h3>
+    <?php if (!empty($bids)): ?>
+        <table class="history__list">
+            <?php foreach ($bids as $bid): ?>
+                <tr class="history__item">
+                    <td class="history__name"><?= htmlspecialchars($bid['user_name']) ?></td>
+                    <td class="history__price"><?= formatPrice($bid['amount']) ?></td>
+                    <td class="history__time"><?= formatTimeAgo($bid['created_at']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <p>Ставок пока нет</p>
+    <?php endif; ?>
+</div>
         </div>
     </div>
 </section>

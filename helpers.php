@@ -230,6 +230,92 @@ function validateEndDate($value)
     return null;
 }
 
-function getPostVal($name) {
-    return $_POST[$name] ?? "";
+
+// Функции по ставкам
+function getCurrentPrice($conn, $lotId) {
+    // Получаем максимальную ставку
+    $sql = "SELECT MAX(amount) as max_bid FROM bids WHERE lot_id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $lotId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $bidData = mysqli_fetch_assoc($result);
+
+    // Если есть ставки, возвращаем максимальную, иначе стартовую цену
+    if ($bidData && $bidData['max_bid']) {
+        return $bidData['max_bid'];
+    }
+
+    // Получаем стартовую цену
+    $sql = "SELECT start_price FROM lots WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $lotId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $lotData = mysqli_fetch_assoc($result);
+
+    return $lotData ? $lotData['start_price'] : 0;
+}
+
+function saveBid($link, $amount, $lotId, $userId) {
+    $sql = "INSERT INTO bids (amount, lot_id, user_id, created_at) VALUES (?, ?, ?, NOW())";
+
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, 'iii', $amount, $lotId, $userId);
+    $result = mysqli_stmt_execute($stmt);
+
+    return $result;
+}
+
+function getBids($link, $lotId) {
+    $sql = "SELECT
+                b.id,
+                b.amount,
+                b.created_at,
+                b.user_id,
+                b.lot_id,
+                u.name as user_name,
+                u.email as user_email
+            FROM bids b
+            JOIN users u ON b.user_id = u.id
+            WHERE b.lot_id = ?
+            ORDER BY b.created_at DESC, b.amount DESC";
+
+    $stmt = mysqli_prepare($link, $sql);
+
+    if (!$stmt) {
+        return [];
+    }
+
+    mysqli_stmt_bind_param($stmt, 'i', $lotId);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    $bids = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $bids[] = $row;
+    }
+
+    mysqli_stmt_close($stmt);
+
+    return $bids;
+}
+
+function formatTimeAgo($datetime) {
+    $time = strtotime($datetime);
+    $now = time();
+    $diff = $now - $time;
+
+    if ($diff < 60) {
+        return 'только что';
+    } elseif ($diff < 3600) {
+        $minutes = floor($diff / 60);
+        return $minutes . ' ' . get_noun_plural_form($minutes, 'минута', 'минуты', 'минут') . ' назад';
+    } elseif ($diff < 86400) {
+        $hours = floor($diff / 3600);
+        return $hours . ' ' . get_noun_plural_form($hours, 'час', 'часа', 'часов') . ' назад';
+    } else {
+        return date('d.m.Y в H:i', $time);
+    }
 }

@@ -39,7 +39,7 @@ if ($isAuth && isset($_SESSION['user']['name'])) {
 
                         <div class="user-menu__logged">
                             <p><?= htmlspecialchars($userName) ?></p>
-                            <a class="user-menu__bets" href="pages/my-bets.html">Мои ставки</a>
+                            <a class="user-menu__bets" href="my-bets.php">Мои ставки</a>
                             <a class="user-menu__logout" href="logout.php">Выход</a>
                         </div>
                     <?php else: ?>
@@ -57,18 +57,15 @@ if ($isAuth && isset($_SESSION['user']['name'])) {
             </div>
         </header>
 
-        <main class="container"> <?= $pageContent ?></main>
+<main class="<?= !$showNavigation ? 'container' : '' ?>">
+    <?php if (isset($showNavigation) && $showNavigation): ?>
+        <?php include 'navigation.php'; ?>
+    <?php endif; ?>
+    <?= $pageContent ?>
+</main>
 
         <footer class="main-footer">
-            <nav class="nav">
-                <ul class="nav__list container">
-                    <?php foreach ($categories as $category): ?>
-                        <li class="nav__item">
-                            <a href="pages/all-lots.html"><?= htmlspecialchars($category['title']) ?></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </nav>
+            <?php include 'navigation.php'; ?>
             <div class="main-footer__bottom container">
                 <div class="main-footer__copyright">
                     <p>© 2019, YetiCave</p>
@@ -112,7 +109,9 @@ if ($isAuth && isset($_SESSION['user']['name'])) {
                         </svg>
                     </a>
                 </div>
-                <a class="main-footer__add-lot button" href="add.php">Добавить лот</a>
+                <?php if ($isAuth): ?>
+                    <a class="main-footer__add-lot button" href="add.php">Добавить лот</a>
+                <?php endif; ?>
                 <div class="main-footer__developed-by">
                     <span class="visually-hidden">Разработано:</span>
                     <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">
@@ -126,9 +125,6 @@ if ($isAuth && isset($_SESSION['user']['name'])) {
                 </div>
             </div>
         </footer>
-
-        <script src="flatpickr.js"></script>
-        <script src="script.js"></script>
 </body>
 
 </html>
