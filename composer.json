@@ -1,0 +1,19 @@
+{
+    "name": "aleksandra/2555185-yeticave-1",
+    "description": "YetiCave is an internet auction platform designed for selling personal belongings, where its bidding system helps users achieve the maximum value by letting buyers compete",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Aleksandra\\2555185Yeticave1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aleksandra"
+        }
+    ],
+    "require": {
+        "symfony/mailer": "^7.3"
+    }
+}
