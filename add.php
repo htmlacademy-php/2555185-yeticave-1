@@ -182,8 +182,8 @@ $pageContent = include_template('add-template.php', [
 $layout_content = include_template('layout.php', [
     'pageContent' => $pageContent,
     'categories' => $categories,
-    'title' => 'Добавление лота'
+    'title' => 'Добавление лота',
+    'showNavigation' => true,
 ]);
 
 echo $layout_content;
-?>

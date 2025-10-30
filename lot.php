@@ -33,7 +33,7 @@ if (!$lot) {
     $pageContent = include_template('404.php', [
         'categories' => $categories,
         'error_code' => 404,
-        'error_text' => 'Следы йети затерялись в снегах. Эта тропа ведёт в никуда'
+        'error_text' => 'Данной страницы не существует на сайте.'
     ]);
 
     $layout = include_template('layout.php', [
@@ -44,16 +44,27 @@ if (!$lot) {
     print $layout;
     exit;
 }
+// Вычисляем текущую цену и минимальную ставку
+$currentPrice = getCurrentPrice($link, $lot['id']);
+$minBid = $currentPrice + $lot['bidding_step'];
+
+//Вычисление ставок по лоту
+$bids = getBids($link, $lot['id']);
 
 $pageContent = include_template('lot-template.php', [
     'lot' => $lot,
-    'categories' => $categories
+    'categories' => $categories,
+    'currentPrice' => $currentPrice,
+    'minBid' => $minBid,
+    'bids' => $bids
+
 ]);
 
 $layout = include_template('layout.php', [
     'pageContent' => $pageContent,
     'title' => $lot['lots_title'],
-    'categories' => $categories
+    'categories' => $categories,
+    'showNavigation' => true,
 ]);
 
 print $layout;
