@@ -9,13 +9,14 @@ date_default_timezone_set('Asia/Vladivostok');
 require_once('./helpers.php');
 require_once('./functions.php');
 require_once 'init.php';
+require_once 'getwinner.php';
 
 if (!$link) {
     $error = mysqli_connect_error();
     $content = include_template('error.php', ['error' => $error]);
 } else {
     // ПОЛУЧЕНИЕ КАТЕГОРИЙ
-    $sql = 'SELECT title, symbol_code FROM categories';
+    $sql = 'SELECT id, title, symbol_code FROM categories';
     $result = mysqli_query($link, $sql);
 
     if ($result) {

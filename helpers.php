@@ -1,21 +1,13 @@
 <?php
 /**
- * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
+ * Форматирует число в строку с ценой в рублях
  *
- * Примеры использования:
- * is_date_valid('2019-01-01'); // true
- * is_date_valid('2016-02-29'); // true
- * is_date_valid('2019-04-31'); // false
- * is_date_valid('10.10.2010'); // false
- * is_date_valid('10/10/2010'); // false
- *
- * @param string $date Дата в виде строки
- *
- * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
+ * @param mixed $number Исходное числовое значение для форматирования
+ * @return string Отформатированная строка с ценой в формате "X XXX ₽"
  */
-
-function formatPrice($number) {
-     if ($number === null || !is_numeric($number)) {
+function formatPrice($number)
+{
+    if ($number === null || !is_numeric($number)) {
         return '0 ₽';
     }
     $rounded = ceil($number);
@@ -26,8 +18,14 @@ function formatPrice($number) {
     }
     return $formatted . ' ₽';
 }
-
-function get_dt_range($date) {
+/**
+ * Вычисляет оставшееся время до указанной даты
+ *
+ * @param string $date Дата и время в формате, понятном для strtotime()
+ * @return array Массив с двумя элементами [часы, минуты]
+ */
+function get_dt_range($date)
+{
     $current_time = time();
     $end_time = strtotime($date);
     $time_diff = $end_time - $current_time;
@@ -43,8 +41,22 @@ function get_dt_range($date) {
 
     return $time;
 }
-
-function is_date_valid(string $date): bool {
+/**
+ * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
+ *
+ * Примеры использования:
+ * is_date_valid('2019-01-01'); // true
+ * is_date_valid('2016-02-29'); // true
+ * is_date_valid('2019-04-31'); // false
+ * is_date_valid('10.10.2010'); // false
+ * is_date_valid('10/10/2010'); // false
+ *
+ * @param string $date Дата в виде строки
+ *
+ * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
+ */
+function is_date_valid(string $date): bool
+{
     $format_to_check = 'Y-m-d';
     $dateTimeObj = date_create_from_format($format_to_check, $date);
 
@@ -54,7 +66,6 @@ function is_date_valid(string $date): bool {
 
     return $dateTimeObj->format($format_to_check) === $date;
 }
-
 /**
  * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
  *
@@ -64,7 +75,8 @@ function is_date_valid(string $date): bool {
  *
  * @return mysqli_stmt Подготовленное выражение
  */
-function db_get_prepare_stmt($link, $sql, $data = []) {
+function db_get_prepare_stmt($link, $sql, $data = [])
+{
     $stmt = mysqli_prepare($link, $sql);
 
     if ($stmt === false) {
@@ -81,11 +93,9 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
             if (is_int($value)) {
                 $type = 'i';
-            }
-            else if (is_string($value)) {
+            } else if (is_string($value)) {
                 $type = 's';
-            }
-            else if (is_double($value)) {
+            } else if (is_double($value)) {
                 $type = 'd';
             }
 
@@ -108,7 +118,6 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 
     return $stmt;
 }
-
 /**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
@@ -131,7 +140,7 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
  *
  * @return string Рассчитанная форма множественнго числа
  */
-function get_noun_plural_form (int $number, string $one, string $two, string $many): string
+function get_noun_plural_form(int $number, string $one, string $two, string $many): string
 {
     $number = (int) $number;
     $mod10 = $number % 10;
@@ -154,14 +163,14 @@ function get_noun_plural_form (int $number, string $one, string $two, string $ma
             return $many;
     }
 }
-
 /**
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона
  * @return string Итоговый HTML
  */
-function include_template($name, array $data = []) {
+function include_template($name, array $data = [])
+{
     $name = 'templates/' . $name;
     $result = '';
 
@@ -177,7 +186,13 @@ function include_template($name, array $data = []) {
 
     return $result;
 }
-
+/**
+ * Валидирует идентификатор категории
+ *
+ * @param mixed $id Идентификатор категории для проверки
+ * @param array $allowedList Массив разрешенных идентификаторов категорий
+ * @return string|null Возвращает строку с ошибкой или null если валидация успешна
+ */
 function validateCategory($id, $allowedList)
 {
 
@@ -191,7 +206,12 @@ function validateCategory($id, $allowedList)
 
     return null;
 }
-
+/**
+ * Валидирует числовое значение цены
+ *
+ * @param mixed $value Значение цены для проверки
+ * @return string|null Возвращает строку с ошибкой или null если валидация успешна
+ */
 function validatePrice($value)
 {
     if (!is_numeric($value) || $value <= 0) {
@@ -199,7 +219,12 @@ function validatePrice($value)
     }
     return null;
 }
-
+/**
+ * Валидирует значение шага ставки
+ *
+ * @param mixed $value Значение шага ставки для проверки
+ * @return string|null Возвращает строку с ошибкой или null если валидация успешна
+ */
 function validateStep($value)
 {
     if (!ctype_digit($value)) {
@@ -212,8 +237,12 @@ function validateStep($value)
 
     return null;
 }
-
-
+/**
+ * Валидирует дату окончания
+ *
+ * @param string $value Строка с датой для проверки
+ * @return string|null Возвращает строку с ошибкой или null если валидация успешна
+ */
 function validateEndDate($value)
 {
     if (!is_date_valid($value)) {
@@ -229,13 +258,18 @@ function validateEndDate($value)
 
     return null;
 }
-
-
-// Функции по ставкам
-function getCurrentPrice($conn, $lotId) {
+/**
+ * Определяет текущую цену лота для аукциона
+ *
+ * @param mysqli $link Объект подключения к базе данных
+ * @param int $lotId ID лота для проверки
+ * @return float|int Текущая цена лота (максимальная ставка или стартовая цена)
+ */
+function getCurrentPrice($link, $lotId)
+{
     // Получаем максимальную ставку
     $sql = "SELECT MAX(amount) as max_bid FROM bids WHERE lot_id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
+    $stmt = mysqli_prepare($link, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $lotId);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -245,10 +279,9 @@ function getCurrentPrice($conn, $lotId) {
     if ($bidData && $bidData['max_bid']) {
         return $bidData['max_bid'];
     }
-
     // Получаем стартовую цену
     $sql = "SELECT start_price FROM lots WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
+    $stmt = mysqli_prepare($link, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $lotId);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -256,8 +289,17 @@ function getCurrentPrice($conn, $lotId) {
 
     return $lotData ? $lotData['start_price'] : 0;
 }
-
-function saveBid($link, $amount, $lotId, $userId) {
+/**
+ * Сохраняет новую ставку в базе данных
+ *
+ * @param mysqli $link Объект подключения к базе данных
+ * @param int $amount Сумма ставки
+ * @param int $lotId ID лота на который делается ставка
+ * @param int $userId ID пользователя делающего ставку
+ * @return bool Возвращает true в случае успешного сохранения, false при ошибке
+ */
+function saveBid($link, $amount, $lotId, $userId)
+{
     $sql = "INSERT INTO bids (amount, lot_id, user_id, created_at) VALUES (?, ?, ?, NOW())";
 
     $stmt = mysqli_prepare($link, $sql);
@@ -266,20 +308,27 @@ function saveBid($link, $amount, $lotId, $userId) {
 
     return $result;
 }
-
-function getBids($link, $lotId) {
-    $sql = "SELECT
-                b.id,
-                b.amount,
-                b.created_at,
-                b.user_id,
-                b.lot_id,
-                u.name as user_name,
-                u.email as user_email
-            FROM bids b
-            JOIN users u ON b.user_id = u.id
-            WHERE b.lot_id = ?
-            ORDER BY b.created_at DESC, b.amount DESC";
+/**
+ * Получает список ставок для указанного лота
+ *
+ * @param mysqli $link Объект подключения к базе данных
+ * @param int $lotId ID лота для которого получаем ставки
+ * @return array Массив ставок с информацией о пользователях
+ */
+function getBids($link, $lotId)
+{
+    $sql = 'SELECT ' .
+        'b.id, ' .
+        'b.amount, ' .
+        'b.created_at, ' .
+        'b.user_id, ' .
+        'b.lot_id, ' .
+        'u.name as user_name, ' .
+        'u.email as user_email ' .
+        'FROM bids b ' .
+        'JOIN users u ON b.user_id = u.id ' .
+        'WHERE b.lot_id = ? ' .
+        'ORDER BY b.created_at DESC, b.amount DESC';
 
     $stmt = mysqli_prepare($link, $sql);
 
@@ -301,8 +350,14 @@ function getBids($link, $lotId) {
 
     return $bids;
 }
-
-function formatTimeAgo($datetime) {
+/**
+ * Форматирует дату в относительное время или абсолютную дату
+ *
+ * @param string $datetime Строка с датой и временем в формате, понятном для strtotime()
+ * @return string Отформатированная строка времени
+ */
+function formatTimeAgo($datetime)
+{
     $time = strtotime($datetime);
     $now = time();
     $diff = $now - $time;
