@@ -17,7 +17,7 @@ if ($result) {
 $errors = [];
 $form_data = $_POST ?? [];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_data = $_POST;
     $requiredFields = ['email', 'password'];
 

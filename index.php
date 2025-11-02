@@ -53,6 +53,7 @@ require_once 'getwinner.php';
         mysqli_stmt_execute($stmt);
         $advertisements = mysqli_stmt_get_result($stmt);
     } else {
+
         $lots_sql = 'SELECT lots.title AS lot_title, lots.id AS lot_id, lots.start_price, lots.image, lots.category_id, lots.end_date, categories.title AS category_title '
             . 'FROM lots '
             . 'JOIN categories ON lots.category_id = categories.id '

@@ -47,7 +47,7 @@
             </li>
 
             <?php for ($i = 1; $i <= $pages_count; $i++): ?>
-                <li class="pagination-item <?= ($i == $current_page) ? 'pagination-item-active' : '' ?>">
+                <li class="pagination-item <?= ($i === $current_page) ? 'pagination-item-active' : '' ?>">
                     <a href="search.php?search=<?= urlencode($search) ?>&page=<?= $i ?>"><?= $i ?></a>
                 </li>
             <?php endfor; ?>
