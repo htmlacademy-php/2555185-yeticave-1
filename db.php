@@ -3,5 +3,5 @@ return [
     'host' => 'mysql',
     'user' => 'root',
     'password' => 'root',
-    'database' => 'yeticave'
+    'database' => 'database'
 ];
