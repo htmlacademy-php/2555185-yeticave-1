@@ -2,8 +2,11 @@
 
 session_start();
 require_once('./helpers.php');
-require_once('./functions.php');
 require_once 'init.php';
+
+$isAuth = isset($_SESSION['user']);
+$userName = $_SESSION['user']['name'] ?? '';
+
 
 // Получаем категории
 
@@ -65,6 +68,8 @@ $layout = include_template('layout.php', [
     'title' => $lot['lots_title'],
     'categories' => $categories,
     'showNavigation' => true,
+    'isAuth' => $isAuth,
+    'userName' => $userName
 ]);
 
 print $layout;

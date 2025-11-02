@@ -2,12 +2,22 @@
 session_start();
 
 require_once('./helpers.php');
-require_once('./functions.php');
 require_once 'init.php';
 
 if (!$link) {
-    $error = mysqli_connect_error();
+    $error = mysqli_connect_error() ?? 'Неизвестная ошибка подключения к базе данных';
     $content = include_template('error.php', ['error' => $error]);
+
+    $layout = include_template('layout.php', [
+        'pageContent' => $content,
+        'title' => 'Ошибка подключения',
+        'categories' => [],
+        'isAuth' => false,
+        'userName' => 'false',
+        'error' => $error,
+    ]);
+    print $layout;
+    exit;
 } else {
     $sql = 'SELECT title, symbol_code FROM categories';
     $result = mysqli_query($link, $sql);
