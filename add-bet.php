@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var mysqli $link
+ */
 session_start();
 require_once 'init.php';
 require_once('./helpers.php');

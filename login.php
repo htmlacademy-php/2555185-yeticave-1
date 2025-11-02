@@ -20,7 +20,6 @@ $form_data = $_POST ?? [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_data = $_POST;
     $requiredFields = ['email', 'password'];
-    $errors = [];
 
     // Проверка обязательных полей
     foreach ($requiredFields as $field) {
@@ -72,4 +71,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 echo $layout_content;
-?>

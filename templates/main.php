@@ -5,14 +5,16 @@
     <ul class="promo__list">
         <?php foreach ($categories as $category): ?>
             <li class="promo__item promo__item--<?= htmlspecialchars($category['symbol_code']) ?>">
-                <a class="promo__link" href="pages/all-lots.html"><?= htmlspecialchars($category['title']) ?></a>
+                <a class="promo__link" href="index.php?category_id=<?= $category['id'] ?>">
+                    <?= htmlspecialchars($category['title']) ?>
+                </a>
             </li>
         <?php endforeach; ?>
     </ul>
 </section>
 <section class="lots">
     <div class="lots__header">
-        <h2>Открытые лоты</h2>
+        <h2><?= $section_title ?></h2>
     </div>
     <ul class="lots__list">
         <?php foreach ($advertisements as $ads): ?>
@@ -34,9 +36,10 @@
                         </div>
                         <?php $time = get_dt_range($ads['end_date']); ?>
                         <div class="lot__timer timer <?php if ($time[0] < 24): ?> timer--finishing<?php endif; ?>">
-                            <?= str_pad($time[0], 2, '0', STR_PAD_LEFT) . ': ' . str_pad($time[1], 2, '0', STR_PAD_LEFT) ?>
+                            <?= str_pad($time[0], 2, '0', STR_PAD_LEFT) . ':' . str_pad($time[1], 2, '0', STR_PAD_LEFT) ?>
                         </div>
                     </div>
+                </div>
             </li>
         <?php endforeach; ?>
     </ul>
