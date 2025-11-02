@@ -16,13 +16,13 @@ if ($result) {
 
     $categoriesIds = array_column($categories, 'id');
 } else {
+
     $error = mysqli_error($link);
     exit();
 }
 
 if (!isset($_SESSION['user'])) {
     http_response_code(403);
-
 
     $pageContent = include_template('404.php', [
         'categories' => $categories,
@@ -37,14 +37,13 @@ if (!isset($_SESSION['user'])) {
     ]);
     print $layout;
     exit;
-
 }
 
 $errors = [];
 $form_data = [];
 
 // Обработка отправки формы
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lot = $_POST;
     $requiredFields = ['lot-name', 'category', 'message', 'lot-rate', 'lot-date', 'lot-step'];
 

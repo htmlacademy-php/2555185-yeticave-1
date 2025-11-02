@@ -19,6 +19,7 @@ if (!$link) {
     print $layout;
     exit;
 } else {
+
     $sql = 'SELECT title, symbol_code FROM categories';
     $result = mysqli_query($link, $sql);
 
