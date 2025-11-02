@@ -1,25 +1,11 @@
 <?php
+/**
+ * @var mysqli $link
+ */
 session_start();
 
 require_once 'init.php';
 require_once 'helpers.php';
-
-// Проверка соединения с БД
-if (!$link) {
-      $error = mysqli_connect_error() ?? 'Неизвестная ошибка подключения к базе данных';
-    $content = include_template('error.php', ['error' => $error]);
-
-    $layout = include_template('layout.php', [
-        'pageContent' => $content,
-        'title' => 'Ошибка подключения',
-        'categories' => [],
-        'isAuth' => false,
-        'userName' => 'false',
-        'error' => $error,
-    ]);
-    print $layout;
-    exit;
-}
 
 // Получаем категории из БД
 $sql = "SELECT id, title FROM categories";
@@ -87,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Валидация по правилам
     foreach ($rules as $field => $rule) {
-        if (isset($lot[$field]) && !empty($lot[$field])) {
+        if (!empty($lot[$field])) {
             $error = $rule($lot[$field]);
             if ($error) {
                 $errors[$field] = $error;

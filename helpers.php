@@ -7,7 +7,7 @@
  */
 function formatPrice($number)
 {
-    if ($number === null || !is_numeric($number)) {
+    if (!is_numeric($number)) {
         return '0 ₽';
     }
     $rounded = ceil($number);
@@ -37,9 +37,7 @@ function get_dt_range($date)
     $hours = floor($time_diff / 3600);
     $minutes = floor(($time_diff % 3600) / 60);
 
-    $time = [$hours, $minutes];
-
-    return $time;
+    return [$hours, $minutes];
 }
 /**
  * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
@@ -182,9 +180,7 @@ function include_template($name, array $data = [])
     extract($data);
     require $name;
 
-    $result = ob_get_clean();
-
-    return $result;
+    return ob_get_clean();
 }
 /**
  * Валидирует идентификатор категории
@@ -304,9 +300,7 @@ function saveBid($link, $amount, $lotId, $userId)
 
     $stmt = mysqli_prepare($link, $sql);
     mysqli_stmt_bind_param($stmt, 'iii', $amount, $lotId, $userId);
-    $result = mysqli_stmt_execute($stmt);
-
-    return $result;
+    return mysqli_stmt_execute($stmt);
 }
 /**
  * Получает список ставок для указанного лота

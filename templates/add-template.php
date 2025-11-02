@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $categories
+ */
+?>
 <form class="form form--add-lot container <?= ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($errors)) ? ' form--invalid' : '' ?>" action="add.php" method="post" enctype="multipart/form-data">
     <h2>Добавление лота</h2>
     <div class="form__container-two">

@@ -50,9 +50,9 @@ foreach ($expired_lots as $lot) {
 
         if (mysqli_stmt_execute($stmt)) {
 
-            $dsn = 'smtp://4234:32434@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
+            /*$dsn = 'smtp://4234:32434@smtp.mailtrap.io:2525?encryption=tls&auth_mode=login';
             $transport = Transport::fromDsn($dsn);
-            $mailer = new Mailer($transport);
+            $mailer = new Mailer($transport);*/
 
             $emailMessage = include_template('email.php', [
                 'winner_name' => $winner_name,
@@ -68,7 +68,7 @@ foreach ($expired_lots as $lot) {
             $message->html($emailMessage);
 
             // Отправка сообщения
-            $mailer->send($message);
+//            $mailer->send($message);
 
             error_log("Победитель определен: $winner_name ($winner_email) - лот '$lot_title'");
         }
